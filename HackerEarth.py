@@ -3,6 +3,54 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 
+
+username="khaledghonem724"
+password="GoToCode_72"
+problemLink="https://www.hackerearth.com/practice/algorithms/searching/linear-search/practice-problems/algorithm/make-an-array-85abd7ad/"
+storing_file="C:\\Users\\PC Castle\\PyCharmMiscProject\\files\\solution.cpp"
+prog_lang="cpp"
+source_code='''
+#include<bits/stdc++.h>
+using namespace std;
+int solve (int N, vector<int> A) {
+    unordered_set<int>st;
+    int maxi=A[0];
+    for (int i=0;i<N;i++){
+        st.insert(A[i]);
+        maxi= max(maxi,A[i]);
+    }
+    if(st.size()>2){
+        return -1;
+    }else{
+        return maxi;
+    }
+}
+
+int main() {
+
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int T;
+    cin >> T;
+    for(int t_i = 0; t_i < T; t_i++)
+    {
+        int N;
+        cin >> N;
+        vector<int> A(N);
+        for(int i_A = 0; i_A < N; i_A++)
+        {
+        	cin >> A[i_A];
+        }
+
+        int out_;
+        out_ = solve(N, A);
+        cout << out_;
+        cout << "\n";
+    }
+}
+'''
+
+
 class BotUser:
     def __init__(self, driver, username = "khaledghonem724",password ="GoToCode_72"):
         self.driver = driver
@@ -88,7 +136,7 @@ class Submission:
         self.judge_response = None
     def __str__(self):
         return (
-                '<<<<<<<<<<<<<<<<<<<< problem printing >>>>>>>>>>>>>>>>>>>> \n'+
+                '<<<<<<<<<<<<<<<<<<<< Submission printing >>>>>>>>>>>>>>>>>>>> \n'+
                 'submission link : ' + str(self.link) + '\n==========================================================================\n' +
                 'code language : ' + str(self.lang) + '\n==========================================================================\n' +
                 'judge_response : ' + str(self.judge_response) + '\n==========================================================================\n' +
@@ -183,7 +231,7 @@ class HackerEarthProblemSubmitter:
             self.bot = BotUser(self.driver)
         self.bot.login()
         self.submission = Submission()
-    def write_code_into_file(self,code,file_path = "C:\\Users\\PC Castle\\PyCharmMiscProject\\files\\solution.cpp") -> str:
+    def write_code_into_file(self,code,file_path = "/home/khaledghonem/gitrepos/HackerEarth/solutions/code.cpp") -> str:
         '''
         DO :
         1- choose a file to write the code in it        # NOT COMPLETE #
@@ -198,7 +246,7 @@ class HackerEarthProblemSubmitter:
         f = open(file_path, "w")
         f.write(code)
         f.close()
-        return "C:\\Users\\PC Castle\\PyCharmMiscProject\\files\\solution.cpp"
+        return file_path
     def submit_solution(self,problem_link,code,language,sleep_time=2):
         '''
         DO:
@@ -218,13 +266,18 @@ class HackerEarthProblemSubmitter:
         file_path = self.write_code_into_file(code)
         self.driver.get(problem_link)
         time.sleep(sleep_time)  # time for loading the problem content # not a must
+
         file_input = self.driver.find_elements(By.ID, "codeFile")[0]
         file_input.send_keys(file_path)
+        print(file_input)
         time.sleep(sleep_time)  # time for updating # not a must
+        language_select = self.driver.find_elements(By.CLASS_NAME, "nice-select")[0]
+
+        # nice-select
         submit_button = self.driver.find_elements(By.CSS_SELECTOR,
                                              "a[class='float-right button btn-blue close-modal-window submit-code medium-margin-right']")
         time.sleep(sleep_time)  # time for searching # it's a MUST
-        submit_button[0].click()
+        # submit_button[0].click()
 
 
 problem_urls =[
@@ -233,7 +286,8 @@ problem_urls =[
     "https://www.hackerearth.com/practice/algorithms/searching/linear-search/practice-problems/algorithm/count-mex-8dd2c00c/"
 ]
 url = problem_urls[2] # try every link to see different results
-scrapper = HackerEarthProblemScrapper()
+#scrapper = HackerEarthProblemScrapper()
 submitter = HackerEarthProblemSubmitter()
 cleaner = Cleaner()
-problem = scrapper.scrap_problem(url)
+#problem = scrapper.scrap_problem(url)
+submitter.submit_solution(problemLink,source_code,prog_lang)
